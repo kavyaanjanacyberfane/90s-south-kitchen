@@ -1,128 +1,131 @@
-<script setup>
-const runtimeConfig = useRuntimeConfig();
-const siteUrl = String(
-  runtimeConfig.public.siteUrl || "https://90ssouthkitchen.com",
-);
-const title = "Our Story | 90's South Kitchen";
-const description =
-  "Discover the nostalgic inspiration behind 90's South Kitchen at Dining District in Patancheru, Hyderabad — a celebration of South Indian flavours and togetherness.";
+<script setup lang="ts">
+import { quoteLink, site } from '~/data/site'
+
 useSeoMeta({
-  title,
-  description,
-  ogTitle: title,
-  ogDescription: description,
-  ogImage: `${siteUrl}/images/90s-south-kitchen-cover.png`,
-  ogUrl: `${siteUrl}/about`,
-  twitterCard: "summary_large_image",
-});
-useHead({ link: [{ rel: "canonical", href: `${siteUrl}/about` }] });
-useSchemaOrg([
+  title: 'About Us',
+  description:
+    "Learn about 90's South Kitchen: a nostalgic South Indian restaurant serving vegetarian and non-vegetarian dishes at Dining District, Patancheru, Hyderabad.",
+})
+
+const values = [
   {
-    "@type": "WebPage",
-    "@id": `${siteUrl}/about#webpage`,
-    name: title,
-    description,
-    url: `${siteUrl}/about`,
-    isPartOf: { "@id": `${siteUrl}/#website` },
+    title: 'Comfort first',
+    text: 'Food that feels familiar and generous, from the first sip of filter coffee to the last spoon of curd rice.',
   },
   {
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: `${siteUrl}/` },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Our Story",
-        item: `${siteUrl}/about`,
-      },
-    ],
+    title: 'Honest cooking',
+    text: 'Fresh ingredients, patient cooking and spices balanced the way a home kitchen would balance them.',
   },
-]);
+  {
+    title: 'A table for everyone',
+    text: 'A full vegetarian menu and a full non-vegetarian menu, so mixed groups can sit and share together.',
+  },
+]
 </script>
+
 <template>
   <div>
-    <section class="page-hero">
-      <div class="page-hero-pattern" aria-hidden="true"></div>
-      <div class="container page-hero-content">
-        <p class="eyebrow">A story seasoned with nostalgia</p>
-        <h1>Rooted in the past.<em>Made for today.</em></h1>
-        <p>
-          Some of our happiest memories begin around a table. That's the feeling
-          we want to bring to every visit.
-        </p>
-        <div class="breadcrumbs">
-          <NuxtLink to="/">Home</NuxtLink><span>／</span><span>Our Story</span>
+    <PageHero
+      eyebrow="About us"
+      title="Cooking the South, with a little nostalgia."
+      intro="90's South Kitchen is a South Indian restaurant for people who miss unhurried meals, familiar flavours and a table full of family."
+    />
+
+    <section class="section" aria-labelledby="about-story">
+      <div class="container-x grid items-center gap-10 md:grid-cols-2 md:gap-16">
+        <div>
+          <p class="eyebrow eyebrow--left mb-3">The idea</p>
+          <h2 id="about-story" class="display-2">Where the 90s meet your plate.</h2>
+          <p class="mt-5">
+            The 1990s were a time of slower meals: steel plates, banana leaves, a kitchen full of
+            aromas and someone always saying "one more helping". Our name is a nod to that era,
+            and our menu is a love letter to the South Indian food that came with it.
+          </p>
+          <p class="mt-4">
+            The clay pot in our emblem says it best: warm food, cooked with care, shared
+            generously. We bring that spirit to every dish, whether it is a simple breakfast
+            or a long family lunch.
+          </p>
+        </div>
+        <div class="arch mx-auto w-full max-w-md">
+          <FoodImage src="/images/Heritage South Indian Feast.png" alt="Cosy, traditional dining space at 90's South Kitchen" ratio="4 / 5" />
         </div>
       </div>
     </section>
-    <section class="section-pad story-section">
-      <div class="container story-grid">
-        <div class="story-image">
-          <img
-            src="https://c.stocksy.com/a/69gH00/z0/4213588.jpg"
-            alt="A warm, shared meal with colourful dishes"
-            width="800"
-            height="900"
-            loading="lazy"
-          /><span class="story-image-seal"
-            >✦<br />Since<br />the good<br />old days</span
-          >
+
+    <section class="section band-sand" aria-labelledby="values-title">
+      <div class="container-x">
+        <SectionHeading eyebrow="What we believe" title="Three things we keep close" />
+        <h2 id="values-title" class="sr-only-text">Our values</h2>
+        <div class="mt-10 grid gap-6 md:grid-cols-3">
+          <article v-for="value in values" :key="value.title" class="card">
+            <h3>{{ value.title }}</h3>
+            <p>{{ value.text }}</p>
+          </article>
         </div>
-        <div class="story-copy">
-          <p class="eyebrow">Why 90's South Kitchen?</p>
-          <h2>Because the best things<br /><em>feel like home.</em></h2>
-          <p>
-            The 90s remind us of simpler joys — family recipes, unhurried
-            conversations, and the comforting sounds and smells of a busy
-            kitchen. Our identity celebrates that warm, familiar spirit through
-            South Indian food culture and a vintage-inspired atmosphere.
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="kitchen-title">
+      <div class="container-x">
+        <SectionHeading
+          eyebrow="Our kitchen"
+          title="Vegetarian and non-vegetarian, side by side"
+          intro="Whatever your table prefers, there is a South Indian favourite waiting for it."
+        />
+        <h2 id="kitchen-title" class="sr-only-text">What we serve</h2>
+        <div class="mt-10 grid gap-6 md:grid-cols-2">
+          <article class="card">
+            <h3 class="flex items-center gap-3">
+              <span class="diet-mark" aria-hidden="true"></span> Vegetarian
+            </h3>
+            <p>
+              Dosas, idlis, vadas, pongal and full vegetarian meals, with chutneys and sambar made
+              fresh.
+            </p>
+          </article>
+          <article class="card">
+            <h3 class="flex items-center gap-3">
+              <span class="diet-mark diet-mark--non" aria-hidden="true"></span> Non-Vegetarian
+            </h3>
+            <p>
+              Spicy Andhra-style chicken, mutton and fish dishes, and flaky parottas with rich
+              curries.
+            </p>
+          </article>
+        </div>
+        <div class="mt-8 flex justify-center">
+          <NuxtLink to="/" class="btn btn-outline">See menu highlights</NuxtLink>
+        </div>
+      </div>
+    </section>
+
+    <section class="section band-sand" aria-labelledby="about-location">
+      <div class="container-x grid items-center gap-8 md:grid-cols-2 md:gap-14">
+        <div>
+          <p class="eyebrow eyebrow--left mb-3">Where to find us</p>
+          <h2 id="about-location" class="display-2">At Dining District, Patancheru</h2>
+          <p class="mt-5">
+            You will find us at Dining District in the Patancheru Industrial Area of Hyderabad. See
+            what else is on offer at Dining District on their website.
           </p>
-          <p>
-            We are building a place for people to reconnect, share a meal, and
-            make fresh memories. Whether you're stopping by or planning a
-            gathering, we want you to feel welcome from the moment you arrive.
-          </p>
-          <div class="quote-card">
-            <span>“</span>
-            <p>Good food tastes even better when there's a story behind it.</p>
+          <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+            <a :href="site.diningDistrictUrl" class="btn btn-outline" target="_blank" rel="noopener noreferrer">
+              Visit Dining District<span class="sr-only-text"> (opens in a new tab)</span>
+            </a>
+            <a :href="site.mapsLink" class="btn btn-outline" target="_blank" rel="noopener noreferrer">
+              Get directions<span class="sr-only-text"> (opens in a new tab)</span>
+            </a>
           </div>
-          <NuxtLink class="button button-primary" to="/request-a-quote"
-            >Plan something special <span>↗</span></NuxtLink
-          >
         </div>
-      </div>
-    </section>
-    <section class="values-section section-pad">
-      <div class="container">
-        <div class="section-heading centered">
-          <p class="eyebrow">Our little philosophy</p>
-          <h2>Three things we <em>believe in.</em></h2>
-        </div>
-        <div class="values-grid">
-          <article>
-            <span class="value-icon">✺</span>
-            <h3>Honour tradition</h3>
-            <p>
-              Celebrate the food memories, flavours and customs that bring us
-              back to our roots.
-            </p>
-          </article>
-          <article>
-            <span class="value-icon">♡</span>
-            <h3>Make room for everyone</h3>
-            <p>
-              Good meals are meant to be shared, with space for stories,
-              laughter and connection.
-            </p>
-          </article>
-          <article>
-            <span class="value-icon">✦</span>
-            <h3>Keep it memorable</h3>
-            <p>
-              Bring a little charm to everyday moments and make every gathering
-              feel special.
-            </p>
-          </article>
+        <div class="card">
+          <h3>Planning a celebration?</h3>
+          <p class="mt-2">
+            Tell us about your occasion and we will prepare a quote for your group.
+          </p>
+          <div class="mt-5">
+            <NuxtLink :to="quoteLink.to" class="btn btn-primary">{{ quoteLink.label }}</NuxtLink>
+          </div>
         </div>
       </div>
     </section>

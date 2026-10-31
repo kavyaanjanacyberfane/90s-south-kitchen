@@ -1,48 +1,55 @@
+import tailwindcss from '@tailwindcss/vite'
+
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2025-01-01',
+  compatibilityDate: '2025-07-15',
   devtools: { enabled: false },
-  css: ['~/assets/css/main.css'],
-  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/seo'],
+
+  // Tailwind utilities first, then hand-written vintage styling.
+  css: ['~/assets/css/main.css', '~/assets/css/vintage.css'],
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
+
+  typescript: {
+    strict: true,
+  },
+
+  // Optional: set NUXT_FORM_WEBHOOK_URL to forward form submissions
+  // (Zapier, Make, Formspree, a Google Apps Script URL, etc.).
   runtimeConfig: {
-    public: {
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'https://90ssouthkitchen.com',
-      gtmId: process.env.NUXT_PUBLIC_GTM_ID || '',
-      gaMeasurementId: process.env.NUXT_PUBLIC_GA_MEASUREMENT_ID || '',
-      gscVerification: process.env.NUXT_PUBLIC_GSC_VERIFICATION || '',
-    },
+    formWebhookUrl: '',
   },
-  site: {
-    url: process.env.NUXT_PUBLIC_SITE_URL || 'https://90ssouthkitchen.com',
-    name: "90's South Kitchen",
-    description: "A nostalgic South Indian restaurant serving vegetarian and non-vegetarian favourites at Dining District, Patancheru, Hyderabad.",
-  },
+
   app: {
     head: {
-      htmlAttrs: { lang: 'en-IN' },
+      htmlAttrs: { lang: 'en' },
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
       meta: [
-        { name: 'theme-color', content: '#a73515' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
+        { name: 'theme-color', content: '#014d2e' },
+        { name: 'format-detection', content: 'telephone=yes' },
       ],
       link: [
+        { rel: 'icon', type: 'image/png', href: '/brand/90sk-badge.png' },
+        { rel: 'apple-touch-icon', href: '/brand/90sk-badge.png' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-        { rel: 'preconnect', href: 'https://images.unsplash.com' },
-        { rel: 'icon', type: 'image/svg+xml', href: '/images/90s-south-kitchen-icon.svg' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700;800&display=swap' },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Nunito+Sans:wght@400;600;700&display=swap',
+        },
       ],
     },
   },
-  sitemap: {
-    autoLastmod: true,
-    urls: ['/about', '/menu', '/contact', '/request-a-quote'],
+
+  nitro: {
+    compressPublicAssets: true,
   },
-  robots: { groups: [{ userAgent: '*', allow: '/' }] },
-  schemaOrg: {
-    identity: {
-      type: 'Organization',
-      name: "90's South Kitchen",
-      url: process.env.NUXT_PUBLIC_SITE_URL || 'https://90ssouthkitchen.com',
-      logo: '/images/90s-south-kitchen-logo.svg',
-    },
+
+  experimental: {
+    // Keeps the CSS inlined for faster first paint on a small marketing site.
+    inlineSSRStyles: true,
   },
 })

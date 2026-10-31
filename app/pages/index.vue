@@ -1,301 +1,304 @@
-<script setup>
-const runtimeConfig = useRuntimeConfig();
-const siteUrl = String(
-  runtimeConfig.public.siteUrl || "https://90ssouthkitchen.com",
-);
-const title =
-  "90's South Kitchen | Traditional South Indian Veg & Non-Veg Restaurant";
-const description =
-  "Discover nostalgic South Indian vegetarian and non-vegetarian favourites at 90's South Kitchen, Dining District, Patancheru Industrial Area, Hyderabad. Call 086394 08555 for enquiries and gatherings.";
+<script setup lang="ts">
+import { nonVegDishes, vegDishes } from "~/data/menu";
+import { quoteLink, site } from "~/data/site";
+
 useSeoMeta({
-  title,
-  description,
-  keywords:
-    "90's South Kitchen, South Indian restaurant, vegetarian and non vegetarian restaurant, South Indian food, Dining District, Patancheru, Hyderabad",
-  ogTitle: title,
-  ogDescription: description,
-  ogImage: `${siteUrl}/images/90s-south-kitchen-cover.png`,
-  ogUrl: siteUrl,
-  ogType: "website",
-  twitterCard: "summary_large_image",
-  twitterTitle: title,
-  twitterDescription: description,
-  twitterImage: `${siteUrl}/images/90s-south-kitchen-cover.png`,
+  title: "South Indian Restaurant in Patancheru, Hyderabad",
+  description:
+    "Vegetarian and non-vegetarian South Indian classics at Dining District, Patancheru, Hyderabad. Dine with 90's South Kitchen or request a quote for your next gathering.",
+  ogTitle: "90's South Kitchen: South Indian dining in Patancheru",
+  ogDescription: site.shortDescription,
 });
-useHead({ link: [{ rel: "canonical", href: `${siteUrl}/` }] });
-useSchemaOrg([
-  {
-    "@type": "WebSite",
-    "@id": `${siteUrl}/#website`,
-    name: "90's South Kitchen",
-    url: siteUrl,
-    description,
-  },
-  {
-    "@type": "WebPage",
-    "@id": `${siteUrl}/#webpage`,
-    name: title,
-    url: `${siteUrl}/`,
-    description,
-    isPartOf: { "@id": `${siteUrl}/#website` },
-  },
-  {
-    "@type": "Restaurant",
-    "@id": `${siteUrl}/#restaurant`,
-    name: "90's South Kitchen",
-    url: siteUrl,
-    image: `${siteUrl}/images/90s-south-kitchen-cover.png`,
-    telephone: "+918639408555",
-    servesCuisine: ["South Indian", "Indian"],
-    acceptsReservations: true,
-    priceRange: "$$",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "Dining District, Patancheru Industrial Area",
-      addressLocality: "Hyderabad",
-      addressRegion: "Telangana",
-      postalCode: "502319",
-      addressCountry: "IN",
-    },
-    parentOrganization: {
-      "@type": "Organization",
-      name: "Dining District",
-      url: "https://diningdistrict.in/",
-    },
-  },
-  {
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: `${siteUrl}/` },
-    ],
-  },
-]);
+
+type Category = "veg" | "non-veg";
+const category = ref<Category>("veg");
+const dishes = computed(() =>
+  category.value === "veg" ? vegDishes : nonVegDishes,
+);
+
 const highlights = [
   {
-    number: "01",
-    title: "South Indian classics",
-    text: "Familiar tiffin favourites, comforting meals and the flavours we grew up with.",
-  },
-  {
-    number: "02",
     title: "Vegetarian & non-vegetarian",
-    text: "A table with choices for everyone, from veg favourites to hearty non-veg dishes.",
+    text: "Two full kitchens of South Indian favourites, so every table finds something to love.",
+    path: "M12 3c3 3 4 6 0 10-4-4-3-7 0-10Zm0 10v8",
   },
   {
-    number: "03",
-    title: "Gather around",
-    text: "A welcoming spot for family meals, friends, celebrations and group get-togethers.",
-  },
-];
-const dishes = [
-  {
-    name: "Breakfast favourites",
-    note: "Golden dosa, idli and chutneys to start the day",
-    image:
-      "https://t3.ftcdn.net/jpg/22/04/67/52/360_F_2204675265_WdMsGLbC44iHKc4DZYQELpGBDCrdfJ4P.jpg",
-    alt: "Crisp golden South Indian dosa with chutneys",
+    title: "Recipes with nostalgia",
+    text: "Dosas, meals and curries made the way they were remembered from the 1990s.",
+    path: "M12 8v5l3 2M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z",
   },
   {
-    name: "South Indian thali",
-    note: "A colourful, comforting spread of regional flavours",
-    image:
-      "https://t4.ftcdn.net/jpg/02/75/39/13/360_F_275391367_Hro3Ql1iFsCNtd86zWYuqa0Qe5cc7goE.jpg",
-      alt: "Traditional Indian thali served with several dishes",
-  },
-  {
-    name: "Dum biryani",
-    note: "Aromatic rice layered with spices and rich flavour",
-    image:
-      "https://img.magnific.com/premium-photo/plate-food-with-noodles-meat-vegetables_1197144-525.jpg?semt=ais_hybrid&w=740&q=80",
-    alt: "Aromatic biryani rice served as a hearty meal",
-  },
-  {
-    name: "Chicken specialities",
-    note: "Hearty non-vegetarian favourites with bold spices",
-    image:
-      "https://www.whiskaffair.com/wp-content/uploads/2021/06/Desi-Chicken-Curry-2-1.jpg",
-    alt: "Indian chicken curry with traditional spices",
+    title: "Made for gatherings",
+    text: "Dine with family, or ask us for a quote when you are planning a bigger occasion.",
+    path: "M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3 20c0-3 2.500-5 5-5s5 2 5 5m0 0c0-3 2.500-5 5-5s3 2 3 5",
   },
 ];
 </script>
 
 <template>
-  <div class="home-refresh">
-    <section class="fresh-hero">
-      <div class="fresh-hero-copy">
-        <p class="fresh-kicker">
-          <span class="kicker-dot"></span> A LITTLE NOSTALGIA, A LOT OF FLAVOUR
-        </p>
-        <h1>South Indian soul.<br /><em>Served with nostalgia.</em></h1>
-        <p class="fresh-intro">
-          From comforting breakfast classics and colourful South Indian thalis
-          to aromatic biryanis, discover familiar flavours made for sharing. A
-          welcoming table for vegetarian and non-vegetarian food lovers alike.
-        </p>
-        <div class="fresh-actions">
-          <NuxtLink class="button button-primary" to="/menu"
-            >Explore the menu <span>→</span></NuxtLink
-          ><NuxtLink class="fresh-text-link" to="/request-a-quote"
-            >Planning a gathering? <span>↗</span></NuxtLink
-          >
-        </div>
-        <div class="fresh-location">
-          <span class="location-mark">⌖</span
-          ><span
-            ><strong>Find us at Dining District</strong
-            ><small>Patancheru Industrial Area, Hyderabad</small></span
-          >
-        </div>
-      </div>
-      <div class="fresh-hero-image">
-        <img
-          src="/Grand South Indian Brass Thali Feast.png"
-          alt="Traditional South Indian thali with colourful regional dishes"
-          width="1200"
-          height="1050"
-          fetchpriority="high"
-        />
-        <div class="hero-image-stamp">
-          <span>90’s</span><small>South Kitchen</small>
-        </div>
-        <div class="hero-image-caption">
-          <span>CLASSIC FLAVOURS</span><i></i><span>MEMORIES AT THE TABLE</span>
-        </div>
-      </div>
-      <div class="hero-bottom-kolam" aria-hidden="true"></div>
-    </section>
-
-    <section class="fresh-intro-band">
-      <p>South Indian comfort</p>
-      <span aria-hidden="true">✦</span>
-      <p>Veg & non-veg favourites</p>
-      <span aria-hidden="true">✦</span>
-      <p>Made for sharing</p>
-    </section>
-
-    <section class="fresh-story section-pad">
-      <div class="story-art-wrap">
-        <img
-          src="/Hearty Indian Non-Vegetarian Thali Feast.png"
-          alt="Traditional Indian snacks ready to share"
-          width="760"
-          height="850"
-          loading="lazy"
-        />
-        <div class="story-art-note">
-          <span>Our Flavours</span><small>Our kind of comfort</small>
-        </div>
-      </div>
-      <div class="fresh-story-copy">
-        <p class="eyebrow">A little about us</p>
-        <h2>Not just a meal.<br /><em>A memory in the making.</em></h2>
-        <p>
-          There is something special about a table full of familiar flavours,
-          stories that run long and one more serving offered with a smile. 90’s
-          South Kitchen celebrates that feeling with a menu that welcomes
-          vegetarian and non-vegetarian diners alike.
-        </p>
-        <p>
-          Come by for a casual meal or get in touch to plan a get-together at
-          Dining District.
-        </p>
-        <NuxtLink class="button button-outline" to="/about"
-          >Our story <span>→</span></NuxtLink
-        >
-      </div>
-      <div class="story-kolam-corner" aria-hidden="true"></div>
-    </section>
-
-    <section class="fresh-highlights">
-      <div class="fresh-section-heading">
-        <p class="eyebrow">The good things</p>
-        <h2>Familiar flavours. <em>Lovely little moments.</em></h2>
-        <p>
-          Simple pleasures, generous plates and room for everyone at the table.
-        </p>
-      </div>
-      <div class="highlight-grid">
-        <article v-for="item in highlights" :key="item.number">
-          <span class="highlight-number">{{ item.number }}</span>
-          <div class="highlight-motif" aria-hidden="true">⌘</div>
-          <h3>{{ item.title }}</h3>
-          <p>{{ item.text }}</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="fresh-menu-preview">
-      <div class="menu-preview-heading">
-        <div>
-          <p class="eyebrow">A taste of the menu</p>
-          <h2>From breakfast<br />to <em>biryani.</em></h2>
-        </div>
-        <NuxtLink class="fresh-text-link" to="/menu"
-          >Explore our menu <span>→</span></NuxtLink
-        >
-      </div>
-      <div class="fresh-dish-grid">
-        <article
-          v-for="dish in dishes"
-          :key="dish.name"
-          class="fresh-dish-card"
-        >
-          <div class="fresh-dish-image">
-            <img
-              :src="dish.image"
-              :alt="dish.alt"
-              width="600"
-              height="450"
-              loading="lazy"
-            /><span class="dish-number">0{{ dishes.indexOf(dish) + 1 }}</span>
+  <div>
+    <!-- Hero -->
+    <section class="hero scallop-bottom" aria-labelledby="hero-title">
+      <div class="container-x section">
+        <div class="hero__grid">
+          <div>
+            <p class="eyebrow eyebrow--left mb-4">
+              Dining District &middot; Patancheru
+            </p>
+            <h1 id="hero-title" class="display-1">
+              The taste of the South, the way we remember it.
+            </h1>
+            <p class="lead mt-5 max-w-xl">
+              Crisp dosas, steaming idlis, fiery Andhra curries and full
+              banana-leaf meals. Pull up a chair at 90's South Kitchen and bring
+              the whole family.
+            </p>
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+              <NuxtLink :to="quoteLink.to" class="btn btn-primary">{{
+                quoteLink.label
+              }}</NuxtLink>
+              <a :href="site.phoneHref" class="btn btn-outline"
+                >Call {{ site.phoneDisplay }}</a
+              >
+            </div>
           </div>
-          <div class="fresh-dish-copy">
-            <h3>{{ dish.name }}</h3>
-            <p>{{ dish.note }}</p>
-          </div>
-        </article>
-      </div>
-      <p class="menu-note">
-        Menu availability may vary. Contact us for current dishes and group
-        dining enquiries.
-      </p>
-    </section>
 
-    <section class="fresh-visit">
-      <div class="visit-kolam" aria-hidden="true"></div>
-      <div class="fresh-visit-copy">
-        <p class="eyebrow">Your table is waiting</p>
-        <h2>Bring everyone<br /><em>to the table.</em></h2>
-        <p>
-          Visit us at Dining District or tell us about your next family meal,
-          celebration or group gathering.
-        </p>
-        <a
-          class="button button-primary"
-          href="https://diningdistrict.in/"
-          target="_blank"
-          rel="noopener noreferrer"
-          >Discover Dining District <span>↗</span></a
-        >
-        <div class="visit-details">
-          <a href="tel:+918639408555">☎ &nbsp;086394 08555</a
-          ><span>Patancheru Industrial Area, Hyderabad, Telangana 502319</span>
+          <div class="relative mx-auto w-full max-w-md">
+            <div class="arch">
+              <FoodImage
+                src="/images/Traditional South Indian Banana-Leaf Feast.png"
+                alt="A traditional South Indian meal served on a banana leaf"
+                ratio="4 / 5"
+                priority
+              />
+            </div>
+            <p class="hero__badge">
+              <strong>Veg &amp; Non-Veg</strong>
+              South Indian kitchen
+            </p>
+          </div>
         </div>
       </div>
-      <a
-        class="fresh-visit-image"
-        href="https://diningdistrict.in/"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="Visit Dining District website"
-        ><img
-          src="/Heritage South Indian Feast.png"
-          alt="Warm restaurant dining space"
-          width="900"
-          height="720"
-          loading="lazy"
-        /><span>Explore Dining District ↗</span></a
+    </section>
+
+    <!-- Highlights -->
+    <section
+      class="section band-sand"
+      aria-label="Why dine with us"
+      style="padding-block: 3rem"
+    >
+      <div class="container-x grid gap-8 md:grid-cols-3">
+        <div v-for="item in highlights" :key="item.title" class="highlight">
+          <span class="highlight__icon" aria-hidden="true">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path :d="item.path" />
+            </svg>
+          </span>
+          <div>
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.text }}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Menu highlights -->
+    <section class="section" aria-labelledby="menu-title">
+      <div class="container-x">
+        <SectionHeading
+          eyebrow="From our kitchen"
+          title="Favourites worth coming back for"
+          intro="A taste of what we cook. Choose a side and have a look."
+        />
+        <h2 id="menu-title" class="sr-only-text">Menu highlights</h2>
+
+        <div class="mt-8 flex justify-center">
+          <div class="toggle-group" role="group" aria-label="Menu category">
+            <button
+              type="button"
+              :aria-pressed="category === 'veg'"
+              @click="category = 'veg'"
+            >
+              <span class="diet-mark" aria-hidden="true"></span> Vegetarian
+            </button>
+            <button
+              type="button"
+              :aria-pressed="category === 'non-veg'"
+              @click="category = 'non-veg'"
+            >
+              <span class="diet-mark diet-mark--non" aria-hidden="true"></span>
+              Non-Vegetarian
+            </button>
+          </div>
+        </div>
+
+        <ul
+          class="dish-grid mt-10"
+          style="list-style: none; padding: 0"
+          aria-live="polite"
+        >
+          <li v-for="dish in dishes" :key="dish.name" class="dish-card">
+            <FoodImage :src="dish.image" :alt="dish.name" ratio="4 / 3" />
+            <div class="dish-card__body">
+              <h3>
+                <span
+                  class="diet-mark"
+                  :class="{ 'diet-mark--non': category === 'non-veg' }"
+                  aria-hidden="true"
+                ></span>
+                {{ dish.name }}
+                <span class="sr-only-text"
+                  >({{
+                    category === "veg" ? "vegetarian" : "non-vegetarian"
+                  }})</span
+                >
+              </h3>
+              <p>{{ dish.description }}</p>
+            </div>
+          </li>
+        </ul>
+
+        <p class="mt-8 text-center text-sm text-[var(--color-bark-700)]">
+          Dishes and availability may vary. Call us on
+          <a :href="site.phoneHref" class="text-link">{{
+            site.phoneDisplay
+          }}</a>
+          to check today's menu.
+        </p>
+      </div>
+    </section>
+
+    <!-- Story teaser -->
+    <section class="section band-sand" aria-labelledby="story-title">
+      <div
+        class="container-x grid items-center gap-10 md:grid-cols-2 md:gap-16"
       >
+        <div class="grid grid-cols-5 gap-4">
+          <div class="col-span-3">
+            <FoodImage
+              src="/images/Heritage South Indian Feast.png"
+              alt="Warm, cosy dining area at 90's South Kitchen"
+              ratio="3 / 4"
+              class="rounded-xl"
+            />
+          </div>
+          <div class="col-span-2 self-end">
+            <FoodImage
+              src="/images/Grand South Indian Brass Thali Feast.png"
+              alt="Brass and clay serving ware on a wooden table"
+              ratio="3 / 4"
+              class="rounded-xl"
+            />
+          </div>
+        </div>
+        <div>
+          <p class="eyebrow eyebrow--left mb-3">Our story</p>
+          <h2 id="story-title" class="display-2">
+            A kitchen that feels like the 90s.
+          </h2>
+          <p class="mt-5">
+            Remember Sunday meals that took all morning, steel tumblers of
+            filter coffee, and a table that always had room for one more? That
+            is the feeling we cook for. Our menu is built around South Indian
+            comfort food, made fresh and served warm.
+          </p>
+          <div class="mt-7">
+            <NuxtLink to="/about" class="btn btn-outline"
+              >More about us</NuxtLink
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quote CTA -->
+    <section
+      class="band-forest on-dark scallop-bottom"
+      aria-labelledby="cta-title"
+      style="--scallop-color: var(--color-sand-100)"
+    >
+      <div class="container-x section text-center">
+        <p class="eyebrow mb-3">Planning a gathering?</p>
+        <h2 id="cta-title" class="display-2 mx-auto max-w-2xl">
+          Let us cook for your next celebration.
+        </h2>
+        <p class="lead mx-auto mt-4 max-w-xl">
+          Tell us the occasion, the date and the number of guests, and we will
+          come back to you with a quote.
+        </p>
+        <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+          <NuxtLink :to="quoteLink.to" class="btn btn-light">{{
+            quoteLink.label
+          }}</NuxtLink>
+          <a :href="site.phoneHref" class="btn btn-ghost-light"
+            >Call {{ site.phoneDisplay }}</a
+          >
+        </div>
+      </div>
+    </section>
+
+    <!-- Visit -->
+    <section
+      class="section"
+      style="background: var(--color-sand-100)"
+      aria-labelledby="visit-title"
+    >
+      <div class="container-x grid items-start gap-10 md:grid-cols-2 md:gap-14">
+        <div>
+          <p class="eyebrow eyebrow--left mb-3">Find us</p>
+          <h2 id="visit-title" class="display-2">Visit 90's South Kitchen</h2>
+          <address class="mt-5 text-lg not-italic">
+            <span v-for="line in site.addressLines" :key="line" class="block">{{
+              line
+            }}</span>
+          </address>
+          <p class="mt-4">
+            Phone:
+            <a :href="site.phoneHref" class="text-link">{{
+              site.phoneDisplay
+            }}</a>
+          </p>
+          <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+            <a
+              :href="site.mapsLink"
+              class="btn btn-primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Get directions<span class="sr-only-text">
+                (opens in a new tab)</span
+              >
+            </a>
+            <a
+              :href="site.diningDistrictUrl"
+              class="btn btn-outline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Visit Dining District<span class="sr-only-text">
+                (opens in a new tab)</span
+              >
+            </a>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Find us inside Dining District</h3>
+          <p class="mt-2">
+            We are part of the Dining District food destination in the
+            Patancheru Industrial Area of Hyderabad. Come hungry and bring
+            friends, colleagues and family.
+          </p>
+        </div>
+      </div>
     </section>
   </div>
 </template>

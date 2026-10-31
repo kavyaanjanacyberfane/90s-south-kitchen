@@ -1,187 +1,180 @@
-<script setup>
-const runtimeConfig = useRuntimeConfig();
-const siteUrl = String(
-  runtimeConfig.public.siteUrl || "https://90ssouthkitchen.com",
-);
-const title = "Request a Quote | 90's South Kitchen";
-const description =
-  "Tell 90's South Kitchen about your event or gathering at Dining District, Patancheru, Hyderabad, and request a quote.";
+<script setup lang="ts">
+import {
+  cuisinePreferences,
+  eventTypes,
+  serviceTypes,
+  validateQuote,
+  type QuotePayload,
+} from '#shared/validation'
+import { site } from '~/data/site'
+
 useSeoMeta({
-  title,
-  description,
-  ogTitle: title,
-  ogDescription: description,
-  ogImage: `${siteUrl}/images/90s-south-kitchen-cover.png`,
-  ogUrl: `${siteUrl}/request-a-quote`,
-  twitterCard: "summary_large_image",
-});
-useHead({ link: [{ rel: "canonical", href: `${siteUrl}/request-a-quote` }] });
-useSchemaOrg([
-  {
-    "@type": "WebPage",
-    "@id": `${siteUrl}/request-a-quote#webpage`,
-    name: title,
-    description,
-    url: `${siteUrl}/request-a-quote`,
-  },
-  {
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: `${siteUrl}/` },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Request a Quote",
-        item: `${siteUrl}/request-a-quote`,
-      },
-    ],
-  },
-]);
-const form = reactive({
-  name: "",
-  phone: "",
-  email: "",
-  eventType: "",
-  date: "",
-  guests: "",
-  details: "",
-});
-const submitted = ref(false);
-function submitRequest() {
-  // Demo only: connect this form to your backend, email provider, or CRM before launch.
-  submitted.value = true;
+  title: 'Request a Quote',
+  description:
+    "Planning a party, family function or corporate event? Request a quote from 90's South Kitchen, Dining District, Patancheru, Hyderabad.",
+})
+
+const blank = (): QuotePayload => ({
+  name: '',
+  email: '',
+  phone: '',
+  organisation: '',
+  eventType: '',
+  eventDate: '',
+  guests: '',
+  service: '',
+  cuisine: '',
+  budget: '',
+  message: '',
+  website: '',
+})
+
+const form = reactive<QuotePayload>(blank())
+
+const { errors, status, submit, reset } = useFormSubmit<QuotePayload>(
+  '/api/quote',
+  validateQuote,
+  'quote',
+)
+
+// Visitor's local date (yyyy-mm-dd) for the date input's min attribute.
+// Set after mount so the server (different time zone) and browser never disagree.
+const today = ref('')
+onMounted(() => {
+  const d = new Date()
+  const pad = (n: number) => String(n).padStart(2, '0')
+  today.value = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+})
+
+const describedBy = (key: keyof QuotePayload, hint = false) =>
+  errors.value[key] ? `quote-${key}-error` : hint ? `quote-${key}-hint` : undefined
+
+async function onSubmit() {
+  const ok = await submit({ ...form })
+  if (ok) Object.assign(form, blank())
 }
 </script>
+
 <template>
   <div>
-    <section class="page-hero compact">
-      <div class="page-hero-pattern" aria-hidden="true"></div>
-      <div class="container page-hero-content">
-        <p class="eyebrow">Your occasion, our pleasure</p>
-        <h1>Let's plan something <em>lovely.</em></h1>
-        <p>
-          Share a few details and we'll have a starting point for your
-          gathering.
-        </p>
-        <div class="breadcrumbs">
-          <NuxtLink to="/">Home</NuxtLink><span>／</span
-          ><span>Request a Quote</span>
-        </div>
-      </div>
-    </section>
-    <section class="section-pad quote-section">
-      <div class="container quote-layout">
-        <aside class="quote-aside">
-          <p class="eyebrow">Make it memorable</p>
-          <h2>A good gathering<br />starts with a <em>hello.</em></h2>
-          <p>
-            Tell us what you're planning — a family get-together, a special
-            celebration, or another occasion. These details are a starting point
-            and can be updated to match the final service offering.
-          </p>
-          <div class="quote-aside-note">
-            <span>✳</span>
+    <PageHero
+      eyebrow="Request a quote"
+      title="Tell us about your occasion."
+      intro="Share a few details and we will get back to you with a quote for your gathering."
+    />
+
+    <section class="section" aria-labelledby="quote-form-title">
+      <div class="container-x grid items-start gap-10 lg:grid-cols-[1.5fr_0.8fr] lg:gap-14">
+        <div class="card">
+          <h2 id="quote-form-title" class="display-2" style="font-size: 1.75rem">Your event details</h2>
+
+          <div v-if="status === 'success'" class="notice notice--success mt-6" role="status">
             <p>
-              Prefer to speak directly?<br /><a href="tel:+918639408555"
-                >Call 086394 08555</a
-              >
+              <strong>Thank you!</strong> We have received your quote request and will contact you
+              on the phone number you gave us.
             </p>
+            <button type="button" class="btn btn-outline mt-4" @click="reset">Submit another request</button>
           </div>
-          <img
-            src="https://static.vecteezy.com/system/resources/thumbnails/068/778/756/small/traditional-south-indian-meal-served-on-banana-leaf-with-rice-and-delicacies-photo.jpeg"
-            alt="A shared meal set for a gathering"
-            width="560"
-            height="420"
-            loading="lazy"
-          />
-        </aside>
-        <div class="form-card">
-          <div v-if="submitted" class="success-message" role="status">
-            <span>✓</span>
-            <h2>Thank you!</h2>
-            <p>
-              Your form is working in demo mode, but it has not been sent to a
-              business inbox yet. Connect a backend or email service before
-              going live.
-            </p>
-            <button
-              class="button button-outline"
-              type="button"
-              @click="submitted = false"
-            >
-              Back to form
-            </button>
-          </div>
-          <form v-else @submit.prevent="submitRequest">
-            <p class="eyebrow">Tell us about your plans</p>
-            <h2>Request a quote</h2>
-            <p class="form-intro">Fields marked * are required.</p>
-            <div class="form-grid">
-              <label
-                >Your name *<input
-                  v-model.trim="form.name"
-                  name="name"
-                  autocomplete="name"
-                  required
-                  placeholder="Full name" /></label
-              ><label
-                >Phone number *<input
-                  v-model.trim="form.phone"
-                  name="phone"
-                  autocomplete="tel"
-                  type="tel"
-                  required
-                  placeholder="Your contact number" /></label
-              ><label
-                >Email address<input
-                  v-model.trim="form.email"
-                  name="email"
-                  autocomplete="email"
-                  type="email"
-                  placeholder="you@example.com" /></label
-              ><label
-                >Type of occasion *<select
-                  v-model="form.eventType"
-                  name="eventType"
-                  required
-                >
-                  <option value="" disabled>Select an occasion</option>
-                  <option>Family gathering</option>
-                  <option>Birthday celebration</option>
-                  <option>Corporate event</option>
-                  <option>Private event</option>
-                  <option>Other</option>
-                </select></label
-              ><label
-                >Preferred date<input
-                  v-model="form.date"
-                  name="date"
-                  type="date" /></label
-              ><label
-                >Estimated guests<input
-                  v-model="form.guests"
-                  name="guests"
-                  type="number"
-                  min="1"
-                  placeholder="e.g. 30" /></label
-              ><label class="full-field"
-                >Tell us more<textarea
-                  v-model.trim="form.details"
-                  name="details"
-                  rows="4"
-                  placeholder="Share any details that will help us understand your plans"
-                ></textarea>
-              </label>
+
+          <form v-else class="mt-6" novalidate @submit.prevent="onSubmit">
+            <div class="form-grid form-grid--2">
+              <FormField id="quote-name" label="Full name" required :error="errors.name">
+                <input id="quote-name" v-model="form.name" class="input" type="text" name="name" autocomplete="name" required :aria-invalid="!!errors.name" :aria-describedby="describedBy('name')" />
+              </FormField>
+
+              <FormField id="quote-organisation" label="Organisation" :error="errors.organisation" hint="Optional, for company events">
+                <input id="quote-organisation" v-model="form.organisation" class="input" type="text" name="organisation" autocomplete="organization" :aria-describedby="describedBy('organisation', true)" />
+              </FormField>
+
+              <FormField id="quote-email" label="Email address" required :error="errors.email">
+                <input id="quote-email" v-model="form.email" class="input" type="email" name="email" autocomplete="email" required :aria-invalid="!!errors.email" :aria-describedby="describedBy('email')" />
+              </FormField>
+
+              <FormField id="quote-phone" label="Phone number" required :error="errors.phone">
+                <input id="quote-phone" v-model="form.phone" class="input" type="tel" name="phone" autocomplete="tel" inputmode="tel" required :aria-invalid="!!errors.phone" :aria-describedby="describedBy('phone')" />
+              </FormField>
+
+              <FormField id="quote-eventType" label="Type of occasion" required :error="errors.eventType">
+                <select id="quote-eventType" v-model="form.eventType" class="input" name="eventType" required :aria-invalid="!!errors.eventType" :aria-describedby="describedBy('eventType')">
+                  <option value="" disabled>Choose an occasion</option>
+                  <option v-for="t in eventTypes" :key="t" :value="t">{{ t }}</option>
+                </select>
+              </FormField>
+
+              <FormField id="quote-eventDate" label="Event date" required :error="errors.eventDate">
+                <input id="quote-eventDate" v-model="form.eventDate" class="input" type="date" name="eventDate" :min="today" required :aria-invalid="!!errors.eventDate" :aria-describedby="describedBy('eventDate')" />
+              </FormField>
+
+              <FormField id="quote-guests" label="Number of guests" required :error="errors.guests" hint="An estimate is fine">
+                <input id="quote-guests" v-model="form.guests" class="input" type="number" name="guests" min="1" max="5000" inputmode="numeric" required :aria-invalid="!!errors.guests" :aria-describedby="describedBy('guests', true)" />
+              </FormField>
+
+              <FormField id="quote-service" label="Service needed" required :error="errors.service">
+                <select id="quote-service" v-model="form.service" class="input" name="service" required :aria-invalid="!!errors.service" :aria-describedby="describedBy('service')">
+                  <option value="" disabled>Choose a service</option>
+                  <option v-for="s in serviceTypes" :key="s" :value="s">{{ s }}</option>
+                </select>
+              </FormField>
+
+              <FormField id="quote-cuisine" label="Menu preference" required :error="errors.cuisine">
+                <select id="quote-cuisine" v-model="form.cuisine" class="input" name="cuisine" required :aria-invalid="!!errors.cuisine" :aria-describedby="describedBy('cuisine')">
+                  <option value="" disabled>Choose a preference</option>
+                  <option v-for="c in cuisinePreferences" :key="c" :value="c">{{ c }}</option>
+                </select>
+              </FormField>
+
+              <FormField id="quote-budget" label="Budget" :error="errors.budget" hint="Optional, for example a per-head figure">
+                <input id="quote-budget" v-model="form.budget" class="input" type="text" name="budget" :aria-describedby="describedBy('budget', true)" />
+              </FormField>
+
+              <div class="span-2">
+                <FormField id="quote-message" label="Anything else we should know?" :error="errors.message" hint="Favourite dishes, dietary needs, timings, venue details...">
+                  <textarea id="quote-message" v-model="form.message" class="input" name="message" rows="5" :aria-describedby="describedBy('message', true)"></textarea>
+                </FormField>
+              </div>
+
+              <!-- Honeypot: hidden from people, tempting for bots -->
+              <div class="honeypot" aria-hidden="true">
+                <label for="quote-website">Leave this field empty</label>
+                <input id="quote-website" v-model="form.website" type="text" name="website" tabindex="-1" autocomplete="off" />
+              </div>
             </div>
-            <p class="privacy-note">
-              Your information will only be used to follow up on this request
-              once the form is connected to a submission service.
-            </p>
-            <button class="button button-primary submit-button" type="submit">
-              Send quote request <span>↗</span>
+
+            <div v-if="status === 'error'" class="notice notice--error mt-5" role="alert">
+              Sorry, we could not send your request just now. Please try again, or call us on
+              <a :href="site.phoneHref" class="text-link">{{ site.phoneDisplay }}</a>.
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-6" :disabled="status === 'submitting'">
+              {{ status === 'submitting' ? 'Sending...' : 'Request my quote' }}
             </button>
           </form>
         </div>
+
+        <aside class="grid gap-6" aria-label="About quotes">
+          <div class="card">
+            <h3>How it works</h3>
+            <ol class="steps mt-4">
+              <li>Send us your occasion, date and guest count.</li>
+              <li>We review your request and call you to talk through the menu.</li>
+              <li>You receive a quote and can confirm when you are ready.</li>
+            </ol>
+          </div>
+          <div class="card">
+            <h3>Prefer to talk?</h3>
+            <p class="mt-1">
+              Call us on <a :href="site.phoneHref" class="text-link">{{ site.phoneDisplay }}</a>.
+            </p>
+            <p class="mt-3 text-sm">
+              {{ site.addressText }}
+            </p>
+            <p class="mt-3">
+              <a :href="site.diningDistrictUrl" class="text-link" target="_blank" rel="noopener noreferrer">
+                Dining District website<span class="sr-only-text"> (opens in a new tab)</span>
+              </a>
+            </p>
+          </div>
+        </aside>
       </div>
     </section>
   </div>
