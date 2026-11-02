@@ -8,7 +8,6 @@ export const site = {
   phoneDisplay: '086394 08555',
   phoneHref: 'tel:+918639408555',
   addressLines: [
-    'Dining District',
     'Patancheru Industrial Area',
     'Hyderabad, Telangana 502319',
     'India',

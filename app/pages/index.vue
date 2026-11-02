@@ -257,6 +257,15 @@ const highlights = [
           <p class="eyebrow eyebrow--left mb-3">Find us</p>
           <h2 id="visit-title" class="display-2">Visit 90's South Kitchen</h2>
           <address class="mt-5 text-lg not-italic">
+            <a
+              :href="site.diningDistrictUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Dining District<span class="sr-only-text">
+                (opens in a new tab)</span
+              >
+            </a>
             <span v-for="line in site.addressLines" :key="line" class="block">{{
               line
             }}</span>
